@@ -1,5 +1,6 @@
 package com.example.discard.screens
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,36 +23,43 @@ import androidx.navigation.NavHostController
 import com.example.discard.R
 import com.example.discard.components.NormalTextComponent
 import com.example.discard.components.PlayButtonComponent
+import com.example.discard.components.TextField
+
 
 @Composable
-fun HomeScreen(navHostController: NavHostController)
+fun Lobby_join(navHostController: NavHostController)
 {
     Box(modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    )
+        contentAlignment = Alignment.Center)
     {
-      Surface (
-          modifier = Modifier
-              .fillMaxSize()
-              .background(Color.White)
-              .padding(28.dp)
-      ) {
-          Column(modifier = Modifier.fillMaxSize()) {
-              Spacer(modifier = Modifier.height(200.dp))
-              NormalTextComponent(value = stringResource(id = R.string.app_name))
-              Spacer(modifier = Modifier.height(100.dp))
-              Button(onClick = {
-                  navHostController.navigate("LobbyScreen")
-              }) {
-                  Text(text="Lobby", fontSize=40.sp)
-              }
-          }
-      }
+        Surface (
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(28.dp)
+        ){
+            Column(modifier = Modifier.fillMaxSize()) {
+                Spacer(modifier = Modifier.height(200.dp))
+                NormalTextComponent(value = stringResource(id = R.string.room_code))
+                Spacer(modifier = Modifier.height(20.dp))
+                TextField(labelValue = stringResource(id = R.string.room_code))
+                TextField(labelValue = stringResource(id = R.string.name))
+                Spacer(modifier = Modifier.height(100.dp))
+                Button(onClick = {
+                    navHostController.navigate("Lobby_join")
+                }) {
+                    Text(text="Join", fontSize=40.sp)
+                }
+
+            }
+
+        }
     }
 }
 
 //@Preview
 //@Composable
-//fun DefaultPreviewofHomeScreen(){
-//    HomeScreen()
+//fun PreviewLobby_join()
+//{
+//    Lobby_join()
 //}

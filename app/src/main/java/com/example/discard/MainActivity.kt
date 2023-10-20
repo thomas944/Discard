@@ -25,18 +25,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DiscardTheme {
+            DiscardTheme{
+                Navigation()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.White
                 ) {
-                    Navigation()
+
 
                 }
             }
         }
     }
+
+
 }
 
 @Composable
@@ -77,19 +80,13 @@ fun getDrawableResource(suit: String, rank:String) : Int {
 }
 
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DiscardTheme {
+
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    DiscardTheme {
         //Greeting("Android")
-        Navigation()
-    }
-}
+//        Navigation()
+ //   }
+//}
