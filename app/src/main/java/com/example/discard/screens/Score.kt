@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.discard.R
 import com.example.discard.components.NormalTextComponent
-import com.example.discard.components.PlayButtonComponent
 import com.example.discard.components.TextField
 
 
