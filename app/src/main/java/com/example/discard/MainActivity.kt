@@ -26,13 +26,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DiscardTheme{
-                Navigation()
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color.White
+                    color = Color.Gray
                 ) {
-
+                    Navigation()
 
                 }
             }
