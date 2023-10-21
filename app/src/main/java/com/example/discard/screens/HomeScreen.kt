@@ -24,6 +24,7 @@ import com.example.discard.components.HeadingTextComponent
 
 
 @Composable
+
 fun HomeScreen(navHostController: NavHostController)
 {
     Box(modifier = Modifier.fillMaxSize(),
@@ -51,6 +52,8 @@ fun HomeScreen(navHostController: NavHostController)
       }
     }
 }
+
+
 
 //@Preview
 //@Composable
