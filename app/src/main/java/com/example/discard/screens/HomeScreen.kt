@@ -22,7 +22,7 @@ import com.example.discard.components.PlayButtonComponent
 
 @Composable
 fun HomeScreen(
-    onNavigateToLobbyScreen: () -> Unit
+   onNavigateToLobbyScreen: () -> Unit
 ){
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -42,6 +42,8 @@ fun HomeScreen(
       }
     }
 }
+
+
 
 //@Preview
 //@Composable
