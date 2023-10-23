@@ -63,7 +63,7 @@ fun Lobby_join(navHostController: NavHostController)
                 TextField(labelValue = stringResource(id = R.string.name))
                 Spacer(modifier = Modifier.height(100.dp))
                 Button(onClick = {
-                    navHostController.navigate("Lobby_join")
+                    navHostController.navigate("Lobby_create")
                 }) {
                     Text(text="Join", fontSize=20.sp)
                 }

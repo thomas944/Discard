@@ -30,6 +30,8 @@ fun HomeScreen(navHostController: NavHostController)
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     )
+
+
     {
       Surface (
           modifier = Modifier
