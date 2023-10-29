@@ -4,13 +4,14 @@ package com.example.discard.components
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -18,26 +19,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,9 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.discard.R
 import com.example.discard.models.CardModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.*
-import androidx.compose.ui.tooling.preview.Preview
 
 
 @Composable
@@ -113,25 +109,30 @@ fun TextField(labelValue:String)
 
 
 @Composable
-fun CardComponent(cardModel: CardModel){
+//fun CardComponent(cardModel: CardModel, onClick: () -> Unit = {}){
+fun CardComponent(
+    currentCard: CardModel,
+    handleCardClick: (CardModel) -> Unit
+){
+    
     Surface(
         modifier = Modifier
             .padding(2.dp)
             .width(50.dp)
             .height(75.dp)
             .clip(RoundedCornerShape(5.dp))
+            .background(Color.White)
     ) {
         Image(
-            painter = painterResource(id = getDrawableResource(cardModel.suit, cardModel.rank)),
+            painter = painterResource(id = getDrawableResource(currentCard.suit, currentCard.rank)),
             contentDescription = "Image",
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
-
-
+                .clickable {
+                    handleCardClick(currentCard)
+                }
         )
     }
-
 }
 
 @Composable
@@ -158,16 +159,16 @@ fun getDrawableResource(suit: String, rank:String) : Int {
     return R.drawable::class.java.getField(resourceName).getInt(null)
 }
 @Composable
-fun CardDeckContainerComponent(listOfCards: List<CardModel>) {
-    var startIndex by remember { mutableStateOf(0)}
-
+fun CardDeckContainerComponent(listOfCards: List<CardModel>, handleCardClick: (CardModel) -> Unit) {
+    var startIndex by remember { mutableIntStateOf(0) }
+    val cardsToDisplay = 5
     Box(
         modifier = Modifier
             .fillMaxSize()
     ){
         Box(
             modifier = Modifier
-                .fillMaxHeight(.333f)
+                .fillMaxSize()
                 .padding(5.dp)
                 .background(Color.White),
 
@@ -180,8 +181,7 @@ fun CardDeckContainerComponent(listOfCards: List<CardModel>) {
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxHeight(.7f)
-                        .fillMaxWidth(),
+                        .fillMaxSize(),
                       //  .background(Color.Red),
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.Center
@@ -193,11 +193,11 @@ fun CardDeckContainerComponent(listOfCards: List<CardModel>) {
                            .background(Color.Red),
                        verticalArrangement = Arrangement.Center
                    ){
-                       if (listOfCards.size >= 4 && startIndex > 0){
+                       if (listOfCards.size >= cardsToDisplay && startIndex > 0){
                            IconButton(
                                onClick = {
                                    startIndex --
-                                   Log.d("Nigs", "StartIndex: $startIndex")
+                                   //Log.d("StateTest", "StartIndex: $startIndex")
                                }
                            ) {
                                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Previous")
@@ -219,9 +219,13 @@ fun CardDeckContainerComponent(listOfCards: List<CardModel>) {
                             verticalAlignment = Alignment.CenterVertically
 
                         ){
-                            val visibleCards = listOfCards.subList(startIndex, minOf(startIndex + 4, listOfCards.size))
+                            val visibleCards = listOfCards.subList(startIndex, minOf(startIndex + cardsToDisplay, listOfCards.size))
                             itemsIndexed(visibleCards) { _, cardModel ->
-                                CardComponent(cardModel)
+                                CardComponent(currentCard = cardModel, handleCardClick = handleCardClick )
+//                                    val mutableList = listOfCards.toMutableList()
+//                                    mutableList.removeAt(startIndex + index)
+//
+//                                }
                             }
                         }
                     }
@@ -232,11 +236,11 @@ fun CardDeckContainerComponent(listOfCards: List<CardModel>) {
                             .background(Color.Cyan),
                         verticalArrangement = Arrangement.Center
                     ){
-                        if (listOfCards.size >= 4 && (startIndex+4 < listOfCards.size)  ){
+                        if (listOfCards.size >= cardsToDisplay && (startIndex+cardsToDisplay < listOfCards.size)  ){
                             IconButton(
                                 onClick = {
                                     startIndex ++
-                                    Log.d("Nigs", "StartIndex: $startIndex")
+                                   // Log.d("StateTest", "StartIndex: $startIndex")
                                 }
                             ) {
                                 Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Next")
@@ -246,41 +250,114 @@ fun CardDeckContainerComponent(listOfCards: List<CardModel>) {
                     }
                 }
             }
+        }
+    }
+}
 
+@Composable
+//fun PlayingCardContainerComponent(playedCardsPile: List<CardModel>, newCardsPile: List<CardModel>){
+fun PlayingCardContainerComponent(
+   deck: List<CardModel>,
+   playedCardsPile: List<CardModel>,
+   handleCardClick: (CardModel) -> Unit
+){
+    Log.d("playedCardsPile", "$playedCardsPile")
+    Log.d("playedCardsPile", "$deck")
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+
+        ){
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(.5f)
+                    .background(Color.Red)
+            ){
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    if (playedCardsPile.isNotEmpty()) {
+                        CardComponent(currentCard = playedCardsPile.first(), handleCardClick = handleCardClick )
+
+                    }
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(.5f)
+                    .background(Color.Green)
+            ){
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    if (deck.isNotEmpty()) {
+                        CardComponent(currentCard = deck.first(), handleCardClick = handleCardClick )
+                    }
+                }
+            }
         }
     }
 }
 
 
 @Composable
-fun PreviewComponent(){
-    val listOfCards = mutableListOf<CardModel>(
-        CardModel("diamond", "1"),
-        CardModel("diamond", "2"),
-        CardModel("diamond", "3"),
-        CardModel("diamond", "4"),
-        CardModel("diamond", "5"),
-        CardModel("diamond", "6"),
-        CardModel("diamond", "7"),
-        CardModel("diamond", "8"),
-        CardModel("diamond", "9"),
-        CardModel("diamond", "10"),
-        CardModel("diamond", "jack"),
-        CardModel("diamond", "queen"),
-        CardModel("diamond", "king"),
+fun PlayersContainerComponent(){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(.333f)
+            .padding(5.dp)
+            .background(Color.Gray)
+    ) {
 
-
-
-    )
-
-    CardDeckContainerComponent(listOfCards = listOfCards)
+    }
 }
 
-@Preview
-@Composable
-fun DefaultPreview(){
-    PreviewComponent()
-}
+
+//@Composable
+//fun PreviewComponent(){
+//    val listOfCards = mutableListOf<CardModel>(
+//        CardModel("diamond", "1"),
+//        CardModel("diamond", "2"),
+//        CardModel("diamond", "3"),
+//        CardModel("diamond", "4"),
+//        CardModel("diamond", "5"),
+//        CardModel("diamond", "6"),
+//        CardModel("diamond", "7"),
+//        CardModel("diamond", "8"),
+//        CardModel("diamond", "9"),
+//        CardModel("diamond", "10"),
+//        CardModel("diamond", "jack"),
+//        CardModel("diamond", "queen"),
+//        CardModel("diamond", "king"),
+//
+//
+//
+//    )
+//
+//    CardDeckContainerComponent(listOfCards = listOfCards)
+//}
+
+//@Preview
+//@Composable
+//fun DefaultPreview(){
+//    //CardComponent(cardModel =         CardModel("diamond", "king"))
+//}
 
 //@Preview
 //@Composable
