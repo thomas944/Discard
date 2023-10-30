@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.discard.components.CardDeckContainerComponent
+import com.example.discard.components.PlayersContainerComponent
 import com.example.discard.components.PlayingCardContainerComponent
 
 @Composable
@@ -34,7 +35,7 @@ fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
                     .weight(.333f)
                     .background(Color.White)
             ){
-
+                PlayersContainerComponent()
             }
             Box(
                 modifier = Modifier

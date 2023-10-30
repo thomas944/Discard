@@ -41,6 +41,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.discard.R
@@ -136,7 +137,9 @@ fun CardComponent(
 }
 
 @Composable
-fun getDrawableResource(suit: String, rank:String) : Int {
+fun getDrawableResource(
+    suit: String, rank:String
+) : Int {
     val suitResource = when(suit){
         "heart" -> "_heart"
         "diamond" -> "_diamond"
@@ -159,7 +162,10 @@ fun getDrawableResource(suit: String, rank:String) : Int {
     return R.drawable::class.java.getField(resourceName).getInt(null)
 }
 @Composable
-fun CardDeckContainerComponent(listOfCards: List<CardModel>, handleCardClick: (CardModel) -> Unit) {
+fun CardDeckContainerComponent(
+    listOfCards: List<CardModel>,
+    handleCardClick: (CardModel) -> Unit
+) {
     var startIndex by remember { mutableIntStateOf(0) }
     val cardsToDisplay = 5
     Box(
@@ -316,52 +322,142 @@ fun PlayingCardContainerComponent(
 
 
 @Composable
-fun PlayersContainerComponent(){
-    Box(
+//fun PlayerIconComponent(name: String, score: Int){
+fun PlayerIconComponent(){
+    Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(.333f)
-            .padding(5.dp)
-            .background(Color.Gray)
-    ) {
+            .padding(2.dp)
+            .width(65.dp)
+            .height(75.dp)
+            .clip(RoundedCornerShape(5.dp))
+    ){
+        Column(
+            modifier = Modifier.background(Color.Gray)
+        ) {
+            Row(
+                modifier = Modifier
+                    .weight(.8f)
+                    .fillMaxSize(),
+            ){
+                Text(
+                    text = "Hello14r341343214",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal
+                    )
+                )
+                //Text(text = name)
+            }
+            Row(
+                modifier = Modifier
+                    .weight(.3f)
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = "5",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontStyle = FontStyle.Normal
+                    )
+                )
+                //Text(text = score.toString())
+            }
+        }
 
     }
 }
 
+@Composable
+//fun DisplayTurnComponent(PlayerTurn: String){
+fun DisplayTurnComponent(){
+    Box(modifier = Modifier.fillMaxSize()){
+        Row(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            Text(
+                text = "Currently Player1sdafasdfsf's \n Turn",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontStyle = FontStyle.Normal
+                ),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
 
-//@Composable
-//fun PreviewComponent(){
-//    val listOfCards = mutableListOf<CardModel>(
-//        CardModel("diamond", "1"),
-//        CardModel("diamond", "2"),
-//        CardModel("diamond", "3"),
-//        CardModel("diamond", "4"),
-//        CardModel("diamond", "5"),
-//        CardModel("diamond", "6"),
-//        CardModel("diamond", "7"),
-//        CardModel("diamond", "8"),
-//        CardModel("diamond", "9"),
-//        CardModel("diamond", "10"),
-//        CardModel("diamond", "jack"),
-//        CardModel("diamond", "queen"),
-//        CardModel("diamond", "king"),
-//
-//
-//
-//    )
-//
-//    CardDeckContainerComponent(listOfCards = listOfCards)
-//}
+@Composable
+fun PlayersContainerComponent(){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp)
+            .background(Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ){
+            Row(
+                modifier = Modifier
+                    .weight(.3f)
+                    .fillMaxSize()
+                    .background(Color.Red),
+                horizontalArrangement = Arrangement.Center
 
-//@Preview
-//@Composable
-//fun DefaultPreview(){
-//    //CardComponent(cardModel =         CardModel("diamond", "king"))
-//}
+            ){
+                PlayerIconComponent()
+                PlayerIconComponent()
+                PlayerIconComponent()
 
-//@Preview
-//@Composable
-//fun DefaultPreviewBackArrowComponent(){
-//    BackArrowComponent()
-//}
+            }
+            Row(
+                modifier = Modifier
+                    .weight(.7f)
+                    .fillMaxSize()
+                    .background(Color.Green)
+            ){
+                Column (
+                    modifier = Modifier
+                        .weight(.3f)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    PlayerIconComponent()
+                    PlayerIconComponent()
 
+                }
+                Column (
+                    modifier = Modifier
+                        .weight(.4f)
+                        .fillMaxSize()
+                ) {
+                    DisplayTurnComponent()
+                }
+                Column (
+                    modifier = Modifier
+                        .weight(.3f)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    PlayerIconComponent()
+                    PlayerIconComponent()
+
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun DefaultPreview(){
+    PlayersContainerComponent()
+}
