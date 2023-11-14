@@ -22,10 +22,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 
+//variables to represent users choice
+//can either be lobby creator or lobby joiner
+const val CREATE_LOBBY = 1
+const val JOIN_LOBBY = 2
 
+object LobbyScreen {
+    private var _lobbyOption: Int? = null
+    var lobbyOption: Int?
+        get() = _lobbyOption
+        set(value) {
+            _lobbyOption = value
+        }
+}
 @Composable
 fun LobbyScreen(navHostController: NavHostController){
+
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -54,12 +70,14 @@ fun LobbyScreen(navHostController: NavHostController){
             ){
                 Spacer(modifier = Modifier.height(200.dp))
                 Button(onClick = {
+                    LobbyScreen.lobbyOption = CREATE_LOBBY
                     navHostController.navigate("Lobby_create")
                 }) {
                     Text(text="Create Lobby", fontSize=20.sp)
                 }
                 Spacer(modifier = Modifier.height(45.dp))
                 Button(onClick = {
+                    LobbyScreen.lobbyOption = JOIN_LOBBY
                     navHostController.navigate("Lobby_join")
                 }) {
                     Text(text="Join Lobby", fontSize=20.sp)
@@ -76,8 +94,9 @@ fun LobbyScreen(navHostController: NavHostController){
 
 
 
-//@Preview
-//@Composable
-//fun DefaultPreviewLobbyScreen(){
-//    LobbyScreen()
-//}
+@Preview
+@Composable
+fun DefaultPreviewLobbyScreen(){
+val navHostController = rememberNavController()
+    LobbyScreen(navHostController = navHostController)
+}

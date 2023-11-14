@@ -88,7 +88,11 @@ fun HeadingTextComponent(value: String){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextField(labelValue:String)
+fun TextField(
+    labelValue: String,
+    value: String = "",
+    onValueChange: (String) -> Unit = {},
+    )
 {
     val textValue= remember {
         mutableStateOf("")

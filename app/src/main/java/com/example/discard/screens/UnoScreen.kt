@@ -29,7 +29,7 @@ fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Box(
+                Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(.333f)
