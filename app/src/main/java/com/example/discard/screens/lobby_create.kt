@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -34,7 +35,7 @@ import com.example.discard.R
 import com.example.discard.components.NormalTextComponent
 import kotlin.random.Random
 import kotlin.random.nextInt
-
+import androidx.navigation.compose.rememberNavController
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -104,9 +105,10 @@ fun Lobby_create(navHostController: NavHostController)
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewLobby_create()
-//{
-//    Lobby_create()
-//}
+@Preview
+@Composable
+fun PreviewLobby_create()
+{
+val navHostController = rememberNavController()
+    Lobby_create(navHostController = navHostController)
+}
