@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.discard.screens.UnoScreen
+import com.example.discard.navigation.Navigation
 import com.example.discard.ui.theme.DiscardTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
             DiscardTheme{
@@ -21,9 +23,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Gray
                 ) {
-                   //Navigation()
+                   Navigation()
                    //PreviewComponent()
-                    UnoScreen()
+//                    UnoScreen()
                     //CardComponent(cardModel =         CardModel("diamond", "king"))
 
                 }

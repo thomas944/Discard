@@ -1,5 +1,6 @@
 package com.example.discard.screens
 
+import GameViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,12 +13,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.discard.R
 import com.example.discard.components.HeadingTextComponent
@@ -25,8 +29,10 @@ import com.example.discard.components.HeadingTextComponent
 
 @Composable
 
-fun HomeScreen(navHostController: NavHostController)
+fun HomeScreen(navHostController: NavHostController, gameViewModel: GameViewModel = viewModel())
 {
+    val gameUiState by gameViewModel.uiState.collectAsState()
+
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     )

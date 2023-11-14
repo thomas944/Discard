@@ -114,6 +114,21 @@ class GameViewModel : ViewModel() {
 
             playCard(currentCard)
         }
+    }
 
+    fun handleCreateLobby(){
+        Log.d("DEBUG FROM FUNC", "${_uiState.value.playerRole}")
+        val currentState = _uiState.value
+        _uiState.value = currentState.copy(
+            playerRole = "creator"
+        )
+        Log.d("DEBUG FROM FUNC", "${_uiState.value.playerRole}")
+    }
+
+    fun handleJoinLobby(){
+        val currentState = _uiState.value
+        _uiState.value = currentState.copy(
+            playerRole = "player"
+        )
     }
 }
