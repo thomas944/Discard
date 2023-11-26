@@ -13,6 +13,6 @@ data class GameUiState(
     val currentCard: CardModel? = null,
     val deck: List<CardModel> = emptyList(),
     val playerRole: String? = null,
-    val roomCode: Int = 0,
+    val roomCode: String? = null,
     val nickName: String? = null,
 )

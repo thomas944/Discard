@@ -1,6 +1,9 @@
 package com.example.discard.navigation
 
 import GameViewModel
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
@@ -12,13 +15,15 @@ import com.example.discard.screens.LobbyScreen
 import com.example.discard.screens.Lobby_create
 import com.example.discard.screens.Lobby_join
 import com.example.discard.screens.Score
+import com.example.discard.wifidirect.WifiDirectViewModel
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun Navigation(){
+fun Navigation(context: Context){
 
     val navController = rememberNavController()
     val gameViewModel = remember { GameViewModel() } // Create the instance of GameViewModel
-
+    val wifiDirectViewModel = remember { WifiDirectViewModel(context)}
 
     NavHost(navController = navController, startDestination = "HomeScreen")
     {
@@ -32,7 +37,7 @@ fun Navigation(){
         }
         composable(route = "Lobby_join")
         {
-            Lobby_join(navController, gameViewModel)
+            Lobby_join(navController, gameViewModel, wifiDirectViewModel)
         }
         composable(route = "Lobby_create")
         {

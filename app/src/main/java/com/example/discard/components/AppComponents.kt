@@ -1,6 +1,7 @@
 package com.example.discard.components
 
 
+import GameViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.discard.R
 import com.example.discard.models.CardModel
 
@@ -88,8 +90,10 @@ fun HeadingTextComponent(value: String){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextField(labelValue:String)
+fun NickNameTextField(labelValue:String, gameViewModel: GameViewModel = viewModel())
 {
+    val gameUiState by gameViewModel.uiState.collectAsState()
+
     val textValue= remember {
         mutableStateOf("")
     }
@@ -105,7 +109,33 @@ fun TextField(labelValue:String)
         value = textValue.value,
         onValueChange = {
             textValue.value= it
+            gameViewModel.updateNickName(it)
     })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RoomCodeTextField(labelValue:String, gameViewModel: GameViewModel = viewModel())
+{
+    val gameUiState by gameViewModel.uiState.collectAsState()
+
+    val textValue= remember {
+        mutableStateOf("")
+    }
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        label= {Text(text = labelValue)},
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = colorResource(id = R.color.black),
+            focusedLabelColor = colorResource(id = R.color.black),
+            cursorColor = colorResource(id = R.color.black)
+        ),
+        keyboardOptions = KeyboardOptions.Default,
+        value = textValue.value,
+        onValueChange = {
+            textValue.value= it
+            gameViewModel.updateRoomCode(it)
+        })
 }
 
 

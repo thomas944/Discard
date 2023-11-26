@@ -13,6 +13,9 @@ class GameViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
+//    private val wifiP2pManager: WifiP2pManager = getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
+//    private val channel: WifiP2pManager.Channel = wifiP2pManager.initialize(this, mainLooper, null)
+//    private val wifiDirectReceiver = WifiDirectBroadcastReceiver(wifiP2pManager, channel, this)
     private fun createInitialGameUiState(){
         val currentState = _uiState.value
         val initialDeck = allCards
@@ -129,6 +132,20 @@ class GameViewModel : ViewModel() {
         val currentState = _uiState.value
         _uiState.value = currentState.copy(
             playerRole = "player"
+        )
+    }
+
+    fun updateRoomCode(roomCode: String){
+        val currentState = _uiState.value
+        _uiState.value = currentState.copy(
+            roomCode = roomCode
+        )
+    }
+
+    fun updateNickName(nickName: String){
+        val currentState = _uiState.value
+        _uiState.value = currentState.copy(
+            nickName = nickName
         )
     }
 }
