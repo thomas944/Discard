@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.discard.MainActivity
 import com.example.discard.screens.GameScreen
 import com.example.discard.screens.HomeScreen
 import com.example.discard.screens.LobbyScreen
@@ -14,7 +15,7 @@ import com.example.discard.screens.Lobby_join
 import com.example.discard.screens.Score
 
 @Composable
-fun Navigation(){
+fun Navigation(mainActivity: MainActivity){
 
     val navController = rememberNavController()
 
@@ -26,7 +27,7 @@ fun Navigation(){
         }
         composable(route = "LobbyScreen")
         {
-            LobbyScreen(navController)
+            LobbyScreen(navController, mainActivity)
         }
         composable(route = "Lobby_join")
         {

@@ -1,5 +1,8 @@
 package com.example.discard.screens
 
+import android.Manifest
+import android.content.ContentValues.TAG
+import android.content.pm.PackageManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,10 +25,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.discard.MainActivity
+import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.WifiP2pManager.ActionListener
+import androidx.core.app.ActivityCompat
+import androidx.navigation.compose.rememberNavController
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.ButtonDefaults
+import com.example.discard.ui.theme.Purple40
 
 
 @Composable
-fun LobbyScreen(navHostController: NavHostController){
+fun LobbyScreen(navHostController: NavHostController, mainActivity: MainActivity){
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -46,6 +60,23 @@ fun LobbyScreen(navHostController: NavHostController){
                     Icon(Icons.Default.ArrowBack, contentDescription = "", tint = Color.Black)
                 }
             }
+            Column {
+                mainActivity.peers.forEach { peer ->
+                    Text(peer.deviceName)
+                    Button(onClick = {
+                        mainActivity.connectToPeer(peer)
+                    }) {
+                        Text("Connect")
+                    }
+                }
+            }
+            mainActivity.connectionInfo.value?.let { info ->
+                if (info.groupFormed) {
+                    Text("Connected to group.")
+                    Text("Group Owner: ${if (info.isGroupOwner) "Yes" else "No"}")
+                    Text("Group Owner Address: ${info.groupOwnerAddress}")
+                }
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -54,15 +85,41 @@ fun LobbyScreen(navHostController: NavHostController){
             ){
                 Spacer(modifier = Modifier.height(200.dp))
                 Button(onClick = {
-                    navHostController.navigate("Lobby_create")
+                    Log.d(TAG, "Discover Peers button clicked")
+                    if (!mainActivity.allPermissionsGranted()) {
+                        mainActivity.requestMissingPermissions()
+                    } else {
+                        mainActivity.discoverPeers()
+                    }
+
                 }) {
-                    Text(text="Create Lobby", fontSize=20.sp)
+                    Text(text="Discover Peers", fontSize=20.sp)
                 }
-                Spacer(modifier = Modifier.height(45.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 Button(onClick = {
-                    navHostController.navigate("Lobby_join")
+                    Log.d(TAG, "Create Group button clicked")
+                    if (!mainActivity.allPermissionsGranted()) {
+                        mainActivity.requestMissingPermissions()
+                    } else {
+                        mainActivity.createGroup()
+                    }
                 }) {
-                    Text(text="Join Lobby", fontSize=20.sp)
+                    Text(text="Create Group", fontSize=20.sp)
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                    onClick = {
+                        navHostController.navigate("GameScreen")
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Purple40,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 100.dp),
+                    border = BorderStroke(1.dp, Purple40)
+                ) {
+                    Text("Play", fontSize=20.sp)
                 }
 
 
@@ -76,8 +133,11 @@ fun LobbyScreen(navHostController: NavHostController){
 
 
 
-//@Preview
-//@Composable
-//fun DefaultPreviewLobbyScreen(){
-//    LobbyScreen()
-//}
+
+
+@Preview
+@Composable
+fun DefaultPreviewLobbyScreen(){
+    val navHostController = rememberNavController()
+    LobbyScreen(navHostController = navHostController, MainActivity())
+}
