@@ -12,12 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.discard.components.CardDeckContainerComponent
 import com.example.discard.components.PlayersContainerComponent
 import com.example.discard.components.PlayingCardContainerComponent
 
 @Composable
-fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
+fun UnoScreen(
+    navHostController: NavHostController,
+    gameViewModel: GameViewModel = viewModel()
+) {
 
     val gameUiState by gameViewModel.uiState.collectAsState()
 
@@ -69,5 +73,5 @@ fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
 @Preview
 @Composable
 fun PreviewUnoScreen(){
-    UnoScreen()
+//    UnoScreen()
 }

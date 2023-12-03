@@ -36,12 +36,11 @@ import com.example.discard.R
 import com.example.discard.components.NickNameTextField
 import com.example.discard.components.NormalTextComponent
 import com.example.discard.components.RoomCodeTextField
-import com.example.discard.wifidirect.WifiDirectViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewModel = viewModel(), wifiDirectViewModel: WifiDirectViewModel = viewModel())
+fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewModel = viewModel())
 {
     val gameUiState by gameViewModel.uiState.collectAsState()
 
@@ -79,7 +78,6 @@ fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewMode
                 if (gameUiState.playerRole == "creator") {
                     Button(onClick = {
                         navHostController.navigate("Lobby_create")
-                        wifiDirectViewModel.wifiDirectReceiver.createGroup(gameUiState.roomCode?.toString() ?: "", context)
                     }) {
                         Text(text="Create",
                             fontSize=20.sp)
