@@ -15,7 +15,6 @@ import com.example.discard.screens.LobbyScreen
 import com.example.discard.screens.Lobby_create
 import com.example.discard.screens.Lobby_join
 import com.example.discard.screens.Score
-import com.example.discard.wifidirect.WifiDirectViewModel
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -23,7 +22,6 @@ fun Navigation(context: Context){
 
     val navController = rememberNavController()
     val gameViewModel = remember { GameViewModel() } // Create the instance of GameViewModel
-    val wifiDirectViewModel = remember { WifiDirectViewModel(context)}
 
     NavHost(navController = navController, startDestination = "HomeScreen")
     {
@@ -37,7 +35,7 @@ fun Navigation(context: Context){
         }
         composable(route = "Lobby_join")
         {
-            Lobby_join(navController, gameViewModel, wifiDirectViewModel)
+            Lobby_join(navController, gameViewModel)
         }
         composable(route = "Lobby_create")
         {

@@ -201,12 +201,13 @@ fun CardDeckContainerComponent(
     Box(
         modifier = Modifier
             .fillMaxSize()
+//            .background(Color.Green)
     ){
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(5.dp)
-                .background(Color.White),
+//                .background(Color.Green),
 
             ){
             Column(
@@ -225,8 +226,9 @@ fun CardDeckContainerComponent(
                    Column(
                        modifier = Modifier
                            .weight(.1f)
-                           .fillMaxHeight()
-                           .background(Color.Red),
+                           .fillMaxHeight(),
+//                           .background(Color.Red),
+
                        verticalArrangement = Arrangement.Center
                    ){
                        if (listOfCards.size >= cardsToDisplay && startIndex > 0){
@@ -245,8 +247,8 @@ fun CardDeckContainerComponent(
                     Box(
                         modifier = Modifier
                             .weight(.8f)
-                            .fillMaxHeight()
-                            .background(Color.Yellow)
+                            .fillMaxHeight(),
+//                            .background(Color.Yellow)
                     ){
                         LazyRow(
                             modifier = Modifier
@@ -255,6 +257,7 @@ fun CardDeckContainerComponent(
                             verticalAlignment = Alignment.CenterVertically
 
                         ){
+
                             val visibleCards = listOfCards.subList(startIndex, minOf(startIndex + cardsToDisplay, listOfCards.size))
                             itemsIndexed(visibleCards) { _, cardModel ->
                                 CardComponent(currentCard = cardModel, handleCardClick = handleCardClick )
@@ -268,8 +271,8 @@ fun CardDeckContainerComponent(
                     Column(
                         modifier = Modifier
                             .weight(.1f)
-                            .fillMaxHeight()
-                            .background(Color.Cyan),
+                            .fillMaxHeight(),
+//                            .background(Color.Cyan),
                         verticalArrangement = Arrangement.Center
                     ){
                         if (listOfCards.size >= cardsToDisplay && (startIndex+cardsToDisplay < listOfCards.size)  ){
@@ -304,6 +307,7 @@ fun PlayingCardContainerComponent(
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp)
+//            .background(Color.Green)
     ){
         Row(
             modifier = Modifier
@@ -314,7 +318,7 @@ fun PlayingCardContainerComponent(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(.5f)
-                    .background(Color.Red)
+//                    .background(Color.Green)
             ){
                 Row(
                     modifier = Modifier
@@ -333,7 +337,7 @@ fun PlayingCardContainerComponent(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(.5f)
-                    .background(Color.Green)
+//                    .background(Color.Green)
             ){
                 Row(
                     modifier = Modifier
@@ -349,17 +353,29 @@ fun PlayingCardContainerComponent(
         }
     }
 }
-
+private fun getTextColor(score: Int): Color {
+    return when {
+        score == 1 -> Color.Red
+        score in 2..3 -> Color(0xFFFFA500) // Orange
+        score in 4..5 -> Color.Green
+        score >= 6 -> Color.Blue
+        else -> Color.Black // Default color, you can change this as needed
+    }
+}
 
 @Composable
 //fun PlayerIconComponent(name: String, score: Int){
-fun PlayerIconComponent(){
+fun PlayerIconComponent(name: String, score: String){
+
+    val textColor = getTextColor(score.toInt())
+
     Surface(
         modifier = Modifier
             .padding(2.dp)
             .width(65.dp)
             .height(75.dp)
             .clip(RoundedCornerShape(5.dp))
+//            .background(Color.Green)
     ){
         Column(
             modifier = Modifier.background(Color.Gray)
@@ -370,7 +386,7 @@ fun PlayerIconComponent(){
                     .fillMaxSize(),
             ){
                 Text(
-                    text = "Hello14r341343214",
+                    text = name,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Normal
@@ -385,10 +401,13 @@ fun PlayerIconComponent(){
                 horizontalArrangement = Arrangement.Center
             ){
                 Text(
-                    text = "5",
+                    text = score,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontStyle = FontStyle.Normal
+                        fontStyle = FontStyle.Normal,
+                        color = textColor,
+//                        fontSize = 30.sp
+
                     )
                 )
                 //Text(text = score.toString())
@@ -400,7 +419,7 @@ fun PlayerIconComponent(){
 
 @Composable
 //fun DisplayTurnComponent(PlayerTurn: String){
-fun DisplayTurnComponent(){
+fun DisplayTurnComponent(PlayerAtTurn: String){
     Box(modifier = Modifier.fillMaxSize()){
         Row(
             modifier = Modifier
@@ -409,7 +428,7 @@ fun DisplayTurnComponent(){
             horizontalArrangement = Arrangement.Center
         ){
             Text(
-                text = "Currently Player1sdafasdfsf's \n Turn",
+                text = "Currently $PlayerAtTurn's \n Turn",
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -422,12 +441,17 @@ fun DisplayTurnComponent(){
 }
 
 @Composable
-fun PlayersContainerComponent(){
+fun PlayersContainerComponent(
+    playerDecks: Map<String, List<CardModel>> = emptyMap(),
+    playerAtTurn: String,
+    ){
+    val keysList: List<String> = playerDecks.keys.toList()
+    val valuesList: List<List<CardModel>> = playerDecks.values.toList()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(5.dp)
-            .background(Color.White)
+//            .background(Color.Green)
     ) {
         Column(
             modifier = Modifier
@@ -436,21 +460,23 @@ fun PlayersContainerComponent(){
             Row(
                 modifier = Modifier
                     .weight(.3f)
-                    .fillMaxSize()
-                    .background(Color.Red),
+                    .fillMaxSize(),
+//                    .background(Color.Red),
                 horizontalArrangement = Arrangement.Center
 
             ){
-                PlayerIconComponent()
-                PlayerIconComponent()
-                PlayerIconComponent()
+                PlayerIconComponent("${keysList.getOrNull(2)}", "${valuesList.getOrNull(2)?.size}")
+                PlayerIconComponent("${keysList.getOrNull(3)}", "${valuesList.getOrNull(3)?.size}")
+                PlayerIconComponent("${keysList.getOrNull(4)}", "${valuesList.getOrNull(4)?.size}")
+                PlayerIconComponent("${keysList.getOrNull(5)}", "${valuesList.getOrNull(5)?.size}")
+
 
             }
             Row(
                 modifier = Modifier
                     .weight(.7f)
                     .fillMaxSize()
-                    .background(Color.Green)
+//                    .background(Color.Green)
             ){
                 Column (
                     modifier = Modifier
@@ -459,8 +485,8 @@ fun PlayersContainerComponent(){
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    PlayerIconComponent()
-                    PlayerIconComponent()
+                    PlayerIconComponent("${keysList.getOrNull(1)}", "${valuesList.getOrNull(1)?.size}")
+                    PlayerIconComponent("${keysList.getOrNull(0)}", "${valuesList.getOrNull(0)?.size}")
 
                 }
                 Column (
@@ -468,7 +494,7 @@ fun PlayersContainerComponent(){
                         .weight(.4f)
                         .fillMaxSize()
                 ) {
-                    DisplayTurnComponent()
+                    DisplayTurnComponent(playerAtTurn)
                 }
                 Column (
                     modifier = Modifier
@@ -477,8 +503,8 @@ fun PlayersContainerComponent(){
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    PlayerIconComponent()
-                    PlayerIconComponent()
+                    PlayerIconComponent("${keysList.getOrNull(6)}", "${valuesList.getOrNull(6)?.size}")
+                    PlayerIconComponent("${keysList.getOrNull(7)}", "${valuesList.getOrNull(7)?.size}")
 
                 }
             }
@@ -489,5 +515,5 @@ fun PlayersContainerComponent(){
 @Preview
 @Composable
 fun DefaultPreview(){
-    PlayersContainerComponent()
+//    PlayersContainerComponent()
 }

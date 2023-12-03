@@ -64,12 +64,13 @@ class WifiDirectBroadcastReceiver(
             manager.createGroup(channel, object : WifiP2pManager.ActionListener {
                 override fun onSuccess() {
                     // Device is ready to accept incoming connections from peers.
-                    Log.d("WIFI", "SUCCESFULLY CREATED GROUP")
+                    Log.d("WIFIDIRECT TEST", "SUCCESSFULLY CREATED GROUP")
                     groupCreationCallback?.invoke()
                 }
 
                 override fun onFailure(reason: Int) {
-                    Log.d("WIFI", "GROUP CREATION FAILED")
+                    Log.d("WIFIDIRECT TEST", "$reason")
+                    Log.d("WIFIDIRECT TEST", "GROUP CREATION FAILED")
                 }
             })
         }

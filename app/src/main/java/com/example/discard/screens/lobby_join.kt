@@ -75,10 +75,11 @@ fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewMode
                 RoomCodeTextField(labelValue = stringResource(id = R.string.room_code), gameViewModel)
                 NickNameTextField(labelValue = stringResource(id = R.string.name), gameViewModel)
                 Spacer(modifier = Modifier.height(100.dp))
+                val context = LocalContext.current
                 if (gameUiState.playerRole == "creator") {
                     Button(onClick = {
                         navHostController.navigate("Lobby_create")
-                        wifiDirectViewModel.wifiDirectReceiver.createGroup(gameUiState.roomCode,LocalContext.current)
+                        wifiDirectViewModel.wifiDirectReceiver.createGroup(gameUiState.roomCode?.toString() ?: "", context)
                     }) {
                         Text(text="Create",
                             fontSize=20.sp)

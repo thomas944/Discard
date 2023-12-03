@@ -24,6 +24,7 @@ fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xff1e9459))
     ){
         Column(
             modifier = Modifier
@@ -33,9 +34,9 @@ fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(.333f)
-                    .background(Color.White)
+                    .background(Color(0xff1e9459))
             ){
-                PlayersContainerComponent()
+                gameUiState.playerAtTurn?.let { PlayersContainerComponent(playerDecks = gameUiState.playerDecks, playerAtTurn = it) }
             }
             Box(
                 modifier = Modifier
@@ -53,10 +54,12 @@ fun UnoScreen(gameViewModel: GameViewModel = viewModel()) {
                     .fillMaxSize()
                     .weight(.333f)
             ){
-                CardDeckContainerComponent(
-                    listOfCards = gameUiState.playerDeck,
-                    handleCardClick = gameViewModel::handleCardClick
-                )
+                gameUiState.playerDecks[gameUiState.playerAtTurn]?.let {
+                    CardDeckContainerComponent(
+                        listOfCards = it,
+                        handleCardClick = gameViewModel::handleCardClick
+                    )
+                }
             }
         }
     }
