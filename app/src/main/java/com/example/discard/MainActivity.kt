@@ -1,6 +1,7 @@
 package com.example.discard
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.ContentValues.TAG
@@ -43,18 +44,15 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.discard.navigation.Navigation
-import com.example.discard.screens.DeviceListScreen
 import com.example.discard.screens.Lobby_join
 import com.example.discard.screens.UnoScreen
 import com.example.discard.ui.theme.DiscardTheme
 import com.example.discard.wifidirect.WifiDirectBroadcastReceiver
 
-class MainActivity : ComponentActivity(){
+class MainActivity : ComponentActivity() {
 
     private var manager: WifiP2pManager? = null
     private var isWifiDirectP2pEnabled = false
-    private var receiverRegistered = false
-
 
     val peers = mutableStateListOf<WifiP2pDevice>()
     val connectionInfo = mutableStateOf<WifiP2pInfo?>(null)
@@ -69,23 +67,23 @@ class MainActivity : ComponentActivity(){
     private val REQUEST_CODE_PERMISSIONS = 10 // Choose an integer value for the request code
 
     // List of permissions to request
-    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.NEARBY_WIFI_DEVICES)
+    private val REQUIRED_PERMISSIONS =
+        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.NEARBY_WIFI_DEVICES, Manifest.permission.CHANGE_WIFI_STATE) // for android 13
 
     // Check if all permissions are granted
-    fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
 
     // Request missing permissions
     fun requestMissingPermissions() {
-       // if (!allPermissionsGranted()) {
         Log.d("Permissions", "Not all permissions granted, had to be requested")
         ActivityCompat.requestPermissions(
             this,
             REQUIRED_PERMISSIONS,
             REQUEST_CODE_PERMISSIONS
-            )
-        //}
+        )
+        Log.d(TAG, "End request permissions")
     }
 
 
@@ -103,6 +101,8 @@ class MainActivity : ComponentActivity(){
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
     fun discoverPeers() {
         if (manager == null) {
             Log.d(TAG, "WifiP2pManager is null.")
@@ -115,98 +115,86 @@ class MainActivity : ComponentActivity(){
         } else {
             Log.d(TAG, "Channel is not null.")
         }
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.NEARBY_WIFI_DEVICES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //if (!allPermissionsGranted()) {
-                requestMissingPermissions()
-                return
-            //}
+        //Check for required permissions
 
-        }
         manager?.discoverPeers(channel, object : WifiP2pManager.ActionListener {
             override fun onSuccess() {
                 Log.d(TAG, "Discovery initiated.")
-                Toast.makeText(this@MainActivity, "Peer discovery started", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Peer discovery started", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             override fun onFailure(reasonCode: Int) {
                 Log.d(TAG, "Discovery failed: $reasonCode")
-                Toast.makeText(this@MainActivity, "Peer discovery failed: $reasonCode", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Peer discovery failed: $reasonCode",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
-    fun createGroup() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.NEARBY_WIFI_DEVICES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //if (!allPermissionsGranted()) {
-                requestMissingPermissions()
-                return
-        //}
-        }
-            manager?.createGroup(channel, object : WifiP2pManager.ActionListener {
-                override fun onSuccess() {
-                    Toast.makeText(this@MainActivity, "Group creation successful", Toast.LENGTH_SHORT).show()
-                }
 
-                override fun onFailure(reasonCode: Int) {
-                    Toast.makeText(this@MainActivity, "Group creation failed: $reasonCode", Toast.LENGTH_SHORT).show()
+    //Function to create wifi direct peer group
+    @SuppressLint("MissingPermission")
+    fun createGroup() {
+            manager?.createGroup(channel, object : WifiP2pManager.ActionListener {
+            override fun onSuccess() {
+                Toast.makeText(this@MainActivity, "Group creation successful", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onFailure(reasonCode: Int) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Group creation failed: $reasonCode",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
+
+    //Update list of peers
     fun handlePeersChanged(peers: WifiP2pDeviceList) {
+        Log.d(TAG, "Handling ${peers.deviceList.size} new peers")
         this.peers.clear()
         this.peers.addAll(peers.deviceList)
     }
 
+    //Display updated device info if changed
     fun handleConnectionChanged(info: WifiP2pInfo) {
         this.connectionInfo.value = info
     }
+
+    @SuppressLint("MissingPermission")
     fun connectToPeer(peer: WifiP2pDevice) {
         val config = WifiP2pConfig().apply {
             deviceAddress = peer.deviceAddress
             wps.setup = WpsInfo.PBC
         }
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.NEARBY_WIFI_DEVICES
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-           // if (!allPermissionsGranted()) {
-                requestMissingPermissions()
-                return
-            //}
-        }
         manager?.connect(channel, config, object : ActionListener {
             override fun onSuccess() {
-                Toast.makeText(this@MainActivity, "Connection to ${peer.deviceName} successful.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Connection to ${peer.deviceName} successful.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.d(TAG, "Connection to peer successful")
             }
 
             override fun onFailure(reason: Int) {
-                Toast.makeText(this@MainActivity, "Connection to ${peer.deviceName} failed.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Connection to ${peer.deviceName} failed.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.d(TAG, "Connection to peer unsuccessful")
 
             }
         })
     }
 
-
+    //Set boolean var to true to be used to display messages whether wifi direct enabled/disabled
     fun setIsWifiDirectP2pEnabled(isWifiDirectP2pEnabled: Boolean) {
         this.isWifiDirectP2pEnabled = isWifiDirectP2pEnabled
     }
@@ -214,68 +202,53 @@ class MainActivity : ComponentActivity(){
     private var channel: Channel? = null
     private var receiver: BroadcastReceiver? = null
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val startTime = System.currentTimeMillis()
+        manager = getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
+        channel = manager?.initialize(this, mainLooper, null)
+        channel?.also { channel ->
+            receiver = WifiDirectBroadcastReceiver(manager, channel, this)
+        }
 
-            manager = getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
-            channel = manager?.initialize(this, mainLooper, null)
-            channel?.also { channel ->
-                receiver = WifiDirectBroadcastReceiver(manager, channel, this)
-            }
-            requestMissingPermissions()
+        requestMissingPermissions()
 
-            setContent {
-                DiscardTheme {
+        setContent {
+            DiscardTheme {
 
 
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = Color.Gray
-                    ) {
-                        Navigation(mainActivity = this@MainActivity)
-                        //PreviewComponent()
-                        //UnoScreen()
-                        //CardComponent(cardModel =         CardModel("diamond", "king"))
-                        //val navHostController = rememberNavController()
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color.Gray
+                ) {
+                    Navigation(mainActivity = this@MainActivity)
+                    //PreviewComponent()
+                    //UnoScreen()
+                    //CardComponent(cardModel =         CardModel("diamond", "king"))
+                    //val navHostController = rememberNavController()
 
-                        //Lobby_join(navHostController = navHostController)
-                    }
+                    //Lobby_join(navHostController = navHostController)
                 }
             }
         }
-        override fun onResume() {
-
-            super.onResume()
-            // Register wifi direct broadcast receiver
-            //if(!receiverRegistered) {
-                registerReceiver(receiver, intentFilter)
-              //  receiverRegistered = true
-           // }
-            //receiver?.also { receiver ->
-              // registerReceiver(receiver, intentFilter)
-           //}
-
-        }
-
-        override fun onPause() {
-            super.onPause()
-            //if(receiverRegistered) {
-                unregisterReceiver(receiver)
-              //  receiverRegistered = false
-           // }
-
-        //receiver?.also { receiver ->
-              //  unregisterReceiver(receiver)
-           // }
-        }
-
-
-
-    companion object {
-        private const val TAG = "wifidirectdemo"
+        val endTime = System.currentTimeMillis()
+        val startupTime = endTime - startTime
+        Log.d(TAG, "App startup time: $startupTime ms")
     }
+
+    override fun onResume() {
+
+        super.onResume()
+        registerReceiver(receiver, intentFilter)
     }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiver)
+
+    }
+}
 
 
 //@Preview(showBackground = true)

@@ -36,6 +36,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
 import com.example.discard.ui.theme.Purple40
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 
 @Composable
@@ -49,7 +51,7 @@ fun LobbyScreen(navHostController: NavHostController, mainActivity: MainActivity
                 .background(Color.White)
                 .padding(14.dp)
         ) {
-
+            //Back arrow
             Column (
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
@@ -60,37 +62,50 @@ fun LobbyScreen(navHostController: NavHostController, mainActivity: MainActivity
                     Icon(Icons.Default.ArrowBack, contentDescription = "", tint = Color.Black)
                 }
             }
-            Column {
-                mainActivity.peers.forEach { peer ->
+
+            //List discovered peers
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+                                    .padding(top = 150.dp), // Adjust the top padding to move the list lower
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+               // mainActivity.peers.forEach { peer ->
+                items(mainActivity.peers) { peer ->
                     Text(peer.deviceName)
                     Button(onClick = {
                         mainActivity.connectToPeer(peer)
                     }) {
                         Text("Connect")
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+
+            //Show group info when connected to a group
             mainActivity.connectionInfo.value?.let { info ->
                 if (info.groupFormed) {
-                    Text("Connected to group.")
-                    Text("Group Owner: ${if (info.isGroupOwner) "Yes" else "No"}")
-                    Text("Group Owner Address: ${info.groupOwnerAddress}")
+                    Column(
+                        modifier = Modifier.padding(vertical = 8.dp) // Add some vertical padding between Text elements
+                    ) {
+                        Spacer(modifier = Modifier.height(50.dp))
+                        Text("Connected to group.")
+                        Text("Group Owner: ${if (info.isGroupOwner) "Yes" else "No"}")
+                        Text("Group Owner Address: ${info.groupOwnerAddress}")
+                    }
                 }
             }
 
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Spacer(modifier = Modifier.height(200.dp))
                 Button(onClick = {
                     Log.d(TAG, "Discover Peers button clicked")
-                    if (!mainActivity.allPermissionsGranted()) {
-                        mainActivity.requestMissingPermissions()
-                    } else {
-                        mainActivity.discoverPeers()
-                    }
+                    mainActivity.discoverPeers()
+
 
                 }) {
                     Text(text="Discover Peers", fontSize=20.sp)
@@ -98,11 +113,7 @@ fun LobbyScreen(navHostController: NavHostController, mainActivity: MainActivity
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(onClick = {
                     Log.d(TAG, "Create Group button clicked")
-                    if (!mainActivity.allPermissionsGranted()) {
-                        mainActivity.requestMissingPermissions()
-                    } else {
-                        mainActivity.createGroup()
-                    }
+                    mainActivity.createGroup()
                 }) {
                     Text(text="Create Group", fontSize=20.sp)
                 }
@@ -121,9 +132,6 @@ fun LobbyScreen(navHostController: NavHostController, mainActivity: MainActivity
                 ) {
                     Text("Play", fontSize=20.sp)
                 }
-
-
-
 
             }
 

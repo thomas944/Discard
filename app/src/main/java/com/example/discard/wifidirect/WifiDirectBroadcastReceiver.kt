@@ -16,6 +16,7 @@ import android.widget.Toast
 import com.example.discard.MainActivity
 import androidx.core.app.ActivityCompat
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
@@ -26,7 +27,9 @@ class WifiDirectBroadcastReceiver(private val manager: WifiP2pManager?, private 
     companion object {
         private const val TAG = "WifiDirectReceiver"
     }
+    @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d(TAG, "Received broadcast: ${intent.action}")
         when (intent.action) {
             WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION -> {   // Wifi direct state changed event
                 //Check if wifi direct is enabled or not and display popup alerting user of state
@@ -45,17 +48,6 @@ class WifiDirectBroadcastReceiver(private val manager: WifiP2pManager?, private 
             }
             WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> {
                 Log.d(TAG, "Wifi direct p2p peers changed")
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.NEARBY_WIFI_DEVICES
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    activity.requestMissingPermissions()
-                    return
-                }
                 manager?.requestPeers(channel) { peers: WifiP2pDeviceList ->
                     activity.handlePeersChanged(peers)
                 }

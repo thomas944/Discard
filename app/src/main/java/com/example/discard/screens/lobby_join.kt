@@ -28,7 +28,11 @@ import com.example.discard.R
 import com.example.discard.components.NormalTextComponent
 import com.example.discard.components.TextField
 
-
+/*
+The lobby screen which allows users to discover peers, create a group, and connect to other devices.
+Upon connecting, the connection and group info will be displayed. Then the users can proceed to the
+game screen
+ */
 @Composable
 fun Lobby_join(navHostController: NavHostController)
 {
