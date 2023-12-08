@@ -18,6 +18,7 @@ import com.example.discard.screens.Score
 import com.example.discard.screens.UnoScreen
 
 /* This contains the logic for the navigation logic to handle the app's flow.
+ * Developed by Young Min Kwon
  */
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
