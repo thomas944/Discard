@@ -17,6 +17,11 @@ import com.example.discard.components.CardDeckContainerComponent
 import com.example.discard.components.PlayersContainerComponent
 import com.example.discard.components.PlayingCardContainerComponent
 
+/* This is the screen where the Discard game, which is similar to Uno, is displayed.
+* This handles the UI for the game and displays the cards and other aspects of gameplay
+* Developed by Thomas Pham
+ */
+
 @Composable
 fun UnoScreen(
     navHostController: NavHostController,

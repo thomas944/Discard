@@ -12,19 +12,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-
+/* This Kotlin class contains that defines the game logic for the app. The game, called Discard, follows
+* similar logic to the game Uno.
+* Developed by Thomas Pham, Huy Tran, and Ngoc Tran.
+ */
 class GameViewModel : ViewModel() {
+
+    //variable to hold game UI state
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
+    //function which creates the game's initial UI state
     private fun createInitialGameUiState(){
         val currentState = _uiState.value
-
+        //creates initial deck of shuffled cards
         val initialDeck = allCards
         val shuffledDeck = initialDeck.shuffled(Random)
-
+        //deal 5 cards to each player
         val cardsPerPlayer = 5
 
+        //distribute cards to each player
         val playerDecks: Map<String, List<CardModel>> = currentState.connectedPlayers
             .mapIndexed { index, player ->
                 val startIndex = index * cardsPerPlayer
@@ -40,6 +47,7 @@ class GameViewModel : ViewModel() {
         }
 
         val firstPlayer = currentState.connectedPlayers.first()
+        //update UI state with the initial game state
         _uiState.value = currentState.copy(
             deck = remainingDeck,
             playerAtTurn = firstPlayer,
@@ -56,14 +64,15 @@ class GameViewModel : ViewModel() {
 
     }
 
+    //create initial game state
     init {
         startGame()
         //Log.d("INIT", "INITCALLED")
     }
 
+    //funtion to start game
     fun startGame(){
         createInitialGameUiState()
-
     }
 
 
@@ -72,8 +81,9 @@ class GameViewModel : ViewModel() {
 
     }
 
+    //implements logic to pick which player goes next
     fun pickNextPlayer(Skip: Boolean){
-        Log.d("Next", "Next player has been eselected")
+        Log.d("Next", "Next player has been selected")
         val currentState = _uiState.value
 
         val currentPlayerIndex = currentState.connectedPlayers.indexOf(currentState.playerAtTurn)
@@ -111,23 +121,29 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    //discard card
+    //function to discard the played card
+    //handles game logic based on which card was played
     fun playCard(card: CardModel){
         Log.d("PlayCard", "PlayCardFunctionCalled")
 
         val currentState = _uiState.value
 
+        //check if the played card pile is empty and handle it
         if (currentState.playedCardsPile.isEmpty()){
             val currentPlayerDeck = currentState.playerDecks[currentState.playerAtTurn]
+            //check if the current player's deck contains the card
             if (currentPlayerDeck != null && card in currentPlayerDeck) {
                 val updatedPlayerDecks = currentState.playerDecks.toMutableMap().apply {
+                    //removes this specific card from the player's deck
                     this[currentState.playerAtTurn!!] = currentPlayerDeck.toMutableList().apply {
                         remove(card)
                     }
                 }
                 val updatedPlayedCardsPile = currentState.playedCardsPile.toMutableList().apply {
+                    //updates the pile of played cards to include the card
                     add(0,card)
                 }
+                //handle if the played card is a king
                 if (card.rank === "king") {
 
                     val currentPlayerIndex = currentState.connectedPlayers.indexOf(currentState.playerAtTurn)
@@ -180,6 +196,7 @@ class GameViewModel : ViewModel() {
                         _uiState.value = currentState
                     }
                 }
+                //handle if played card is a queen
                 else if (card.rank === "queen"){
                     Log.d("Game Logic", currentState.reverse.toString())
                     val newDirection = !currentState.reverse

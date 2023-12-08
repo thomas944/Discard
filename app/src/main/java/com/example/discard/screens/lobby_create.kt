@@ -34,6 +34,13 @@ import androidx.navigation.NavHostController
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+/* Lobby screen that displays nicknames of users that are connected
+* in a lobby and displays a passcode at the top.
+* Essentially a waiting area for users to wait until all users arrive.
+* Developed by Young Min Kwon
+ */
+
+//composable function to handle UI of lobby screen
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -55,13 +62,14 @@ fun Lobby_create(navHostController: NavHostController, gameViewModel: GameViewMo
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ){
-                TextButton(onClick = {
+                TextButton(onClick = {   //back arrow to return to last screen
                     navHostController.navigate("LobbyScreen")
                 }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "", tint = Color.Black)
                 }
             }
 
+            //can be modified to display names of users in the lobby
             val fakeNames = listOf(
                 "Alice",
                 "Bob",
@@ -91,6 +99,8 @@ fun Lobby_create(navHostController: NavHostController, gameViewModel: GameViewMo
                     }
                 }
                 Spacer(modifier = Modifier.height(25.dp))
+
+                //button to allow player to move to the game screen
                 Button(onClick = {
                     navHostController.navigate("GameScreen")
                 }) {

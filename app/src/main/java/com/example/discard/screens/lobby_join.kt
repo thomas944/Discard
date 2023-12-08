@@ -37,7 +37,10 @@ import com.example.discard.components.NickNameTextField
 import com.example.discard.components.NormalTextComponent
 import com.example.discard.components.RoomCodeTextField
 
-
+/* Intermediate lobby screen which could allow a user to either create a lobby or join a lobby.
+* Contains text fields for a user to input a nickname and passcode.
+* Developed by Young Min Kwon
+*/
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewModel = viewModel())
@@ -58,7 +61,7 @@ fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewMode
                 horizontalAlignment = Alignment.Start
             ){
                 TextButton(onClick = {
-                    navHostController.navigate("LobbyScreen")
+                    navHostController.navigate("LobbyScreen") //display back arrow
                 }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "", tint = Color.Black)
                 }
@@ -69,11 +72,13 @@ fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewMode
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                //Display text fields to allow users to input nickname and passcode
                 NormalTextComponent(value = stringResource(id = R.string.room_code))
                 Spacer(modifier = Modifier.height(20.dp))
                 RoomCodeTextField(labelValue = stringResource(id = R.string.room_code), gameViewModel)
                 NickNameTextField(labelValue = stringResource(id = R.string.name), gameViewModel)
                 Spacer(modifier = Modifier.height(100.dp))
+                //If user desires to create the lobby, handle this situation
                 val context = LocalContext.current
                 if (gameUiState.playerRole == "creator") {
                     Button(onClick = {
@@ -83,6 +88,7 @@ fun Lobby_join(navHostController: NavHostController, gameViewModel: GameViewMode
                             fontSize=20.sp)
 
                     }
+                //If user wants to join a lobby, handle this situation
                 }else {
                     Button(onClick = {
 //                        navHostController.navigate("Lobby_create")

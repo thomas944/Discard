@@ -26,7 +26,11 @@ import androidx.navigation.NavHostController
 import com.example.discard.R
 import com.example.discard.components.HeadingTextComponent
 
-
+/*
+* This is the home screen of the app and the first screen that is displayed to the user.
+* Allows for the navigation to the lobby of the game.
+* Developed by Young Min Kwon
+ */
 @Composable
 
 fun HomeScreen(navHostController: NavHostController, gameViewModel: GameViewModel = viewModel())

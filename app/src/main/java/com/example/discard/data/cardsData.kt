@@ -1,5 +1,10 @@
 package com.example.discard.data
-
+/* Part of the game logic, defines a list of all types of cards in the game,
+* each an instance of the CardModel class.
+* The CardModel class contains the rank and suit as properties, both of which are
+* significant during gameplay to determine what cards the player can play.
+* Developed by Thomas Pham, Huy Tran, and Ngoc Tran.
+*/
 import com.example.discard.models.CardModel
 
 val allCards: List<CardModel> = listOf(

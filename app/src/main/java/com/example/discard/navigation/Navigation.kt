@@ -17,6 +17,8 @@ import com.example.discard.screens.Lobby_join
 import com.example.discard.screens.Score
 import com.example.discard.screens.UnoScreen
 
+/* This contains the logic for the navigation logic to handle the app's flow.
+ */
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun Navigation(mainActivity: MainActivity){

@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 
+/* This is simply an intermediate screen between the game screen and the scoreboard.
+* Developed by Young Min Kwon
+ */
 @Composable
 fun GameScreen(navHostController: NavHostController,  gameViewModel: GameViewModel = viewModel())
 {

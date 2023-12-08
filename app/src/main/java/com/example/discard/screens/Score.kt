@@ -31,6 +31,11 @@ import androidx.navigation.NavHostController
 import com.example.discard.R
 import com.example.discard.components.NormalTextComponent
 
+/* This is the scoreboard screen which can be used to display
+* the game results after completion of a game. Allows for display
+* of user names and their scores.
+ * Developed by Young Min Kwon
+ */
 
 @Composable
 fun Score(navHostController: NavHostController,  gameViewModel: GameViewModel = viewModel())
