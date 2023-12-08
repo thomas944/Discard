@@ -38,6 +38,7 @@ import com.example.discard.ui.theme.Purple40
 * allows users to discover other peers, connect to other peers, and create peer groups.
 * This screen displays group information when connected to a group and allows the user to
 * move to the game screen.
+* Developed by Young Min Kwon and Azeem Mir
  */
 
 // create composable function to handle lobby screen UI
