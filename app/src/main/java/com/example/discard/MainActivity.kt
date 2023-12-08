@@ -199,8 +199,19 @@ class MainActivity : ComponentActivity() {
     }
 
     //function returns true or false depending on whether the user has wifi direct enabled or not
+    //and prompts user if it disabled
     fun setIsWifiDirectP2pEnabled(isWifiDirectP2pEnabled: Boolean) {
         this.isWifiDirectP2pEnabled = isWifiDirectP2pEnabled
+
+        if(isWifiDirectP2pEnabled) {
+            Log.d(TAG, "Wifi Direct enabled")
+        }
+        else {
+            Log.d(TAG, "Wifi direct is not enabled")
+            Toast.makeText(this, "Please enable Wifi direct P2P", Toast.LENGTH_SHORT).show()
+
+
+        }
     }
 
     //initialize vars for wifi direct communication and the broadcast receiver
